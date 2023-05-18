@@ -9,7 +9,7 @@ router.get('/', slackController.testServer, (req,res) => {
 })
 
 router.post('/', slackController.readMessage, slackController.postMessage, (req, res) => {
-  return res.status(200).json('OK');
+  return res.status(200).json(req.body.challenge);
 });
 
 export default router;
