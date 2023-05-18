@@ -1,0 +1,24 @@
+{
+  "name": "work-history-chat-auto-responder",
+  "version": "1.0.0",
+  "description": "Levereges ChatGPT to auto-respond to questions from Slack or other sources about my resume or work history",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GP3-RS/Work-history-chat-auto-responder.git"
+  },
+  "author": "Gahl Peled",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GP3-RS/Work-history-chat-auto-responder/issues"
+  },
+  "homepage": "https://github.com/GP3-RS/Work-history-chat-auto-responder#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "node-fetch": "^3.3.1"
+  }
+}
