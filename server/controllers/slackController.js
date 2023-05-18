@@ -1,15 +1,11 @@
-import fetch from "node-fetch";
-import * as dotenv from 'dotenv';
-dotenv.config();
-
-console.log(process.env.CHANNEL_NAME);
+const slackController = {};
 
 let payload = {
-  channel: process.env.CHANNEL_NAME,
-  text: 'hello world!'
-}
+    channel: process.env.CHANNEL_NAME,
+    text: 'hello world!'
+  }
 
-const f = () => fetch("https://slack.com/api/chat.postMessage", {
+slackController.postMessage = (req, res, next) => {fetch("https://slack.com/api/chat.postMessage", {
   method: "POST",
   body: JSON.stringify(payload),
   headers: {
@@ -26,9 +22,11 @@ const f = () => fetch("https://slack.com/api/chat.postMessage", {
     }
     return res.json();
   })
-  .then(data => console.log(data))
+  .then(data => {
+    console.log(data);
+    return next()
+  })
   .catch((error) => {
     console.log(error);
-  });
-
-f();
+  })
+}
