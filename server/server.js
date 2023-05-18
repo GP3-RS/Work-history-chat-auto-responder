@@ -1,6 +1,3 @@
-import fetch from "node-fetch";
-import * as dotenv from 'dotenv';
-dotenv.config();
 import express from "express";
 
 const path = require('path');
@@ -14,7 +11,7 @@ const apiRouter = require('./routes/api');
 
 app.use('/api', apiRouter)
 
-app.use('/', apiRouter)
+app.use('/', apiRouter);
 
 app.use((req, res) => res.sendStatus(404));
 

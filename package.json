@@ -2,7 +2,7 @@
   "name": "work-history-chat-auto-responder",
   "version": "1.0.0",
   "description": "Levereges ChatGPT to auto-respond to questions from Slack or other sources about my resume or work history",
-  "main": "index.js",
+  "main": "server.server.js",
   "type": "module",
   "scripts": {
     "test": "test"
