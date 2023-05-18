@@ -9,7 +9,7 @@ let payload = {
     text: 'hello world!'
   }
 
-slackController.testServer = (req, req, next) => {
+slackController.testServer = (req, res, next) => {
     console.log('SERVER IS LIVE AND RESPONDING TO REQUESTS')
     return next();
 }
@@ -40,3 +40,5 @@ slackController.postMessage = (req, res, next) => {
         console.log(error);
     })
 }
+
+export default slackController;

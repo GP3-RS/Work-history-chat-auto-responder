@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 
-const apiRouter = require('./server/routes/api');
+import apiRouter from './server/routes/api.js'
 
 app.use('/api', apiRouter)
 
@@ -28,5 +28,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}`);
 });
-
-module.exports = app;

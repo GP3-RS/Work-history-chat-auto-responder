@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 
-const slackController = require('../controllers/slackController');
+import slackController from '../controllers/slackController.js';
 
 const router = express.Router();
 
@@ -12,4 +12,4 @@ router.post('/', slackController.postMessage, (req, res) => {
   return res.status(200).json('OK');
 });
 
-module.exports = router;
+export default router;
