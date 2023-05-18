@@ -14,6 +14,11 @@ slackController.testServer = (req, res, next) => {
     return next();
 }
 
+slackController.readMessage = (req, res, next) => {
+    console.log(req.body);
+    return next();
+}
+
 slackController.postMessage = (req, res, next) => {
   fetch("https://slack.com/api/chat.postMessage", {
     method: "POST",

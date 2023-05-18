@@ -7,8 +7,6 @@ app.use(express.json());
 
 import apiRouter from './server/routes/api.js'
 
-app.use('/api', apiRouter)
-
 app.use('/', apiRouter);
 
 app.use((req, res) => res.sendStatus(404));
