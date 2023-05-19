@@ -15,7 +15,7 @@ slackController.testServer = (req, res, next) => {
 }
 
 slackController.readMessage = (req, res, next) => {
-    console.log(req.body);
+    console.log('is bot? ', req.body.authorizations[0].is_bot);
     return next();
 }
 
