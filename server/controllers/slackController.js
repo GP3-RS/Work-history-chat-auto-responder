@@ -19,13 +19,19 @@ slackController.logMessage = (req, res, next) => {
 }
 
 slackController.filterBotMessages = (req, res, next) => {
-    if (!req.body.event.client_msg_id || req.body.event.bot_id) res.status(200).json(req.body.challenge);
-    if (req.body.event.client_msg_id && req.body.event.bot_id === undefined) return next();
-    return next({
-        log: "error in slackController.filterBotMessages",
-        message: { err: 'There was an error with your post request' },
-    });
-}
+    if (!req.body.event.client_msg_id || req.body.event.bot_id) {
+        return res.status(200).json(req.body.challenge);
+    } 
+    else if (req.body.event.client_msg_id && req.body.event.bot_id === undefined) {
+        return next();
+    } 
+    else {
+        return next({
+            log: "error in slackController.filterBotMessages",
+            message: { err: 'There was an error with your post request' },
+        });
+    }
+};
 
 slackController.postMessage = (req, res, next) => {
   fetch("https://slack.com/api/chat.postMessage", {
