@@ -1,50 +1,19 @@
 import * as dotenv from 'dotenv';
+import fs from "fs";
+import path from 'path';
 dotenv.config();
 
 import { Configuration, OpenAIApi } from "openai";
 
-const resume = `
-Gahl Peled Resume 
-Skills: 
-    TypeScript, JavaScript, React, Redux, Node.js, Express, SQL, PostgreSQL, MongoDB, Redis, HTML5, Sass/SCSS, CSS, testing (Jest, Puppeteer, React Testing Library, Cypress), Webpack, Electron, Material-UI, Tailwind, Kubernetes, Docker, AWS, OAuth 2.0, WebSockets, WebRTC, RESTful API, GraphQL, Travis CI, Git/GitHub, Object-Oriented Programming. 
-Work Experience: 
-    Company: Codesmith 
-        Title: Software Engineer 
-        Dates of Employment: January 2023 - May 2023
-        Reason for Leaving: Contract-based role. Contract ended.
-        Developed features and components with React/Redux, including an RSVP management feature to view and cancel
-        users workshop RSVPs, resulting in an immediate increase in workshop attendance and a decrease in no-shows
-        Designed an approach to integration tests for write features by creating functions to mock various app states and http
-        requests within Jest, increasing test coverage by about 20% and serving as a template for future write-based tests
-        Improved the reliability, data validation, and error handling of the authorization API by replacing query utils with
-        models in PostgreSQL queries, resulting in reduced vulnerability to SQL injection attacks
-        Used Cypress for end-to end tests to ensure compatibility, improve code quality, increase scalability, and make it
-        easier to onboard newer developers who can start contributing without merging breaking changes
-        Mentored junior engineers through code reviews, pair programming, and knowledge transfers, working on algorithmic
-        best practices for the given technical requirements and optimal time/space complexity
-        Led Scrum meetings to help reprioritize targets and facilitate launch for open source tooling
-    Company: Chronos (Open Source Product)
-        Title: Software Engineer
-        Dates of Employment: October 2022 - January 2023
-        Utilized Kubernetes DNS to query Prometheus monitoring server, gathering data on K8s clusters and exporting data
-        to user-specified SQL or NoSQL database, enabling engineers to make data-driven decisions about their microservices
-        Scaled app by adding a tab to the React/Redux frontend, allowing users to select which metrics they would like to
-        record to their database, resulting in significantly reduced database bloat for users from interval-based database writes
-        Migrated to TypeScript for its strict, automated type-checking for faster debugging, enhancing future development by
-        making code more predictable, and because our product prioritized scalability over development speed
-        Audited all dependencies and removed or updated node modules to eliminate vulnerabilities and technical debt,
-        resulting in a lighter app with 50% faster compilation and more responsive hot module replacement
-        Rebuilt Chronos’s front-end data-visualization app to enable compatibility with ARM-64 Apple “M” architecture
-        Chronos is an open source product developed under tech accelerator OS Labs
-    Company: CliniConnects
-        Title: Operations and Product Manager
-        Worked with lead engineer and CTO to ideate, test, and deploy new features for enterprise-grade, HIPAA-compliant
-        remote workforce management application that was built with Angular and deployed on Microsoft Azure
-        Led scrum meetings with the engineering team to guide the development of clinician credentialing and staff
-        auto-assignment features that enabled higher compliance rates and faster scheduling, reducing wait times for patients
-INTERESTS:
-    Motorcycles, Scuba diving, Rock climbing, escape rooms, travel, dancing (bachata, salsa), formula one
-`
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+
+const __dirname = path.dirname(__filename);
+
+const resume = fs.readFileSync(path.resolve(__dirname + '../../../resume'), { encoding: 'utf8', flag: 'r' })
+
+// console.log(resume);
 
 const openai = new OpenAIApi(new Configuration({
     apiKey: process.env.OPENAI_TOKEN,
@@ -52,24 +21,47 @@ const openai = new OpenAIApi(new Configuration({
 
 const chatGPTController = {};
 
-// const messages = [
-//     {"role": "system", "content": process.env.PROMPT},
-//     {"role": "user", "content": "I'm going to give you Gahl's resume. I want you to answer questions in the first person as if you are him. Try to keep your responses under 100 words maximum. Here it is: " + process.env.RESUME},
-//     {"role": "user", "content": "Tell me about your experience working with Node"},
-//     {"role": "assistant", "content": "Sure. Well, first off I made this ChatGPT resume auto-responder with Node and Express. I love working with Node because it's non-blocking and event-driven, so I can answer questions like this while I'm asleep."},
-//     {"role": "user", "content": req.body.event.text}
-// ]
+const messages = [
+    {"role": "system", "content": process.env.PROMPT},
+    {"role": "user", "content": "I'm going to give you Gahl's resume. I want you to answer questions in the first person as if you are him. Try to keep your responses under 100 words maximum. Here it is: " + resume},
+    {"role": "user", "content": "Tell me about your experience working with Node"},
+    {"role": "assistant", "content": "Sure. Well, first off I made this ChatGPT resume auto-responder with Node and Express. I love working with Node because it's non-blocking and event-driven, so I can answer questions like this while I'm asleep."},
+]
+
+const primedResponse = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages,
+    temperature: 0,
+    max_tokens: 300,
+    })
+
+    console.log(primedResponse.data.choices[0].message.content);
+
+// chatGPTController.prime = async (req, res, next) => {
+//     const primedResponse = await openai.create({
+//         model: "gpt-3.5-turbo",
+//         prompt: process.env.PROMPT + "Limit your responses to a maximum of 2000 characters" + "Gahl's Resume is:" + resume + "My most recent place of employment is Codesmith",
+//         temperature: 0,
+//         max_tokens: 300,
+//         });
+// }
 
 chatGPTController.generateResponse = async (req, res, next) => {
-
-    const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: process.env.PROMPT + "Gahl's Resume is:" + resume + "here's the question:" + req.body.event.text,
-        temperature: 1,
-        max_tokens: 1000,
+    console.log(req.body.event.text);
+    const response = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [
+            {"role": "system", "content": process.env.PROMPT},
+            {"role": "user", "content": "here is Gahl's resume, answer questions as if you are him, using his resume" + resume},
+            {"role": "user", "content": req.body.event.text}
+        ],
+        temperature: 0,
+        max_tokens: 300,
       });
 
-    const text = response.data.choices[0].text.trim().replace(/(\r\n|\n|\r)/gm, "");
+      console.log(response.data.choices)
+
+    const text = response.data.choices[0].message.content.trim().replace(/(\r\n|\n|\r)/gm, "");
 
     console.log('text is ', text);
 

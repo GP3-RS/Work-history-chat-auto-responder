@@ -4,11 +4,6 @@ dotenv.config();
 
 const slackController = {};
 
-let payload = {
-    channel: process.env.CHANNEL_NAME,
-    text: 'new generic message'
-  }
-
 slackController.testServer = (req, res, next) => {
     console.log('SERVER IS LIVE AND RESPONDING TO REQUESTS')
     return next();
@@ -21,7 +16,7 @@ slackController.logMessage = (req, res, next) => {
 slackController.filterBotMessages = (req, res, next) => {
     if (!req.body.event.client_msg_id || req.body.event.bot_id) {
         return res.status(200).json(req.body.challenge);
-    } 
+    }
     else if (req.body.event.client_msg_id && req.body.event.bot_id === undefined) {
         return next();
     } 
@@ -34,13 +29,19 @@ slackController.filterBotMessages = (req, res, next) => {
 };
 
 slackController.postMessage = (req, res, next) => {
+
+    let payload = {
+        channel: process.env.CHANNEL_NAME,
+        text: res.locals.response
+      }
+
     console.log('in postMessage, res.locals.response is ', res.locals.response);
 
     console.log('typeof is ', typeof res.locals.response);
 
   fetch("https://slack.com/api/chat.postMessage", {
     method: "POST",
-    body: res.locals.response,
+    body: JSON.stringify(payload),
     headers: {
         "Content-Type": "application/json; charset=utf-8",
         Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
