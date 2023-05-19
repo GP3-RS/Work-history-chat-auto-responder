@@ -47,7 +47,7 @@ const primedResponse = await openai.createChatCompletion({
 // }
 
 chatGPTController.generateResponse = async (req, res, next) => {
-    console.log(req.body.event.text);
+    if (!req.body.event.text) return next();
     const response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [
@@ -59,14 +59,7 @@ chatGPTController.generateResponse = async (req, res, next) => {
         max_tokens: 300,
       });
 
-      console.log(response.data.choices)
-
     const text = response.data.choices[0].message.content.trim().replace(/(\r\n|\n|\r)/gm, "");
-
-    console.log('text is ', text);
-
-    console.log('RESPONSE FROM CHATGPT IS', text);
-    console.log('data type is', typeof text);
 
     res.locals.response = text;
     return next();

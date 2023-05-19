@@ -4,17 +4,11 @@ dotenv.config();
 
 const slackController = {};
 
-slackController.testServer = (req, res, next) => {
-    console.log('SERVER IS LIVE AND RESPONDING TO REQUESTS')
-    return next();
-}
-
 slackController.logMessage = (req, res, next) => {
     return next();
 }
 
 slackController.filterBotMessages = (req, res, next) => {
-    console.log('req.body is: ', req.body);
     if (!req.body.event.client_msg_id || req.body.event.bot_id) {
         return res.status(200).json(req.body.challenge);
     }
@@ -30,16 +24,13 @@ slackController.filterBotMessages = (req, res, next) => {
 };
 
 slackController.postMessage = (req, res, next) => {
+    if (!res.locals.response) return next();
 
     let payload = {
         channel: process.env.CHANNEL_NAME,
         text: res.locals.response
       }
-
-    console.log('in postMessage, res.locals.response is ', res.locals.response);
-
-    console.log('typeof is ', typeof res.locals.response);
-
+      
   fetch("https://slack.com/api/chat.postMessage", {
     method: "POST",
     body: JSON.stringify(payload),
