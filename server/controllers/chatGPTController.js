@@ -42,6 +42,8 @@ chatGPTController.generateResponse = (req, res, next) => {
       })
         .then(response => {
 
+          console.log('response is', response);
+
           if (!response) throw new Error('no response');
           else if (response.data.error) throw new Error(response.data.error);
 
