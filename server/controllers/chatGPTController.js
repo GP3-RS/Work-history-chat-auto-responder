@@ -24,7 +24,7 @@ const openai = new OpenAIApi(new Configuration({
 const chatGPTController = {};
 
 chatGPTController.generateResponse = async (req, res, next) => {
-    if (!req.body.event.text) return next();
+    if (res.locals.question.length === 0) return next();
     const response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [

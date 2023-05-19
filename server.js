@@ -9,7 +9,7 @@ import apiRouter from './server/routes/api.js'
 
 
 //APP TURNED OFF TO SAVE MONEY DURING TESTING
-// app.use('/api', apiRouter);
+app.use('/api', apiRouter);
 
 app.use((req, res) => res.sendStatus(404));
 

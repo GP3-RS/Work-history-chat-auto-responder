@@ -14,16 +14,16 @@ slackController.urlVerification = (req, res, next) => {
 }
 
 slackController.filterBotMessages = (req, res, next) => {
-    if (!req.body.event.client_msg_id || req.body.event.bot_id) {
-        return res.status(200).json(req.body.challenge);
-    }
-    else if (req.body.event.client_msg_id && req.body.event.bot_id === undefined) {
+    res.status(200).json(req.body.challenge);
+    if (req.body.event.client_msg_id && req.body.event.bot_id === undefined) {
+        res.locals.question = req.body.event.text;
         return next();
     }
     else {
         return next({
             log: "error in slackController.filterBotMessages",
             message: { err: 'There was an error with your post request' },
+            status: 200,
         });
     }
 };
