@@ -81,7 +81,7 @@ chatGPTController.generateResponse = (req, res, next) => {
                 console.log('ERROR IN POSTMESSAGE:', error);
             })
           }
-          
+          return;
         })
         
     return next();
