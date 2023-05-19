@@ -6,7 +6,7 @@ const slackController = {};
 
 let payload = {
     channel: process.env.CHANNEL_NAME,
-    text: 'hello world!'
+    text: 'new generic message'
   }
 
 slackController.testServer = (req, res, next) => {
@@ -21,9 +21,12 @@ slackController.logMessage = (req, res, next) => {
 
 slackController.filterBotMessages = (req, res, next) => {
     console.log(req.body);
-    console.log(req.body.)
-    if (req.body.authorizations[0].is_bot) return res.status(200).json(req.body.challenge);
-    else return next();
+    console.log(req.body.authorizations[0].is_bot)
+    if (req.body.authorizations[0].is_bot || req.body?.message?.bot_id || req.body?.message?.bot_profile) return next({
+        log: "error in slackController.filterBotMessages",
+        message: { err: 'There was an error with your post request' },
+    });
+    return next();
 }
 
 slackController.postMessage = (req, res, next) => {
