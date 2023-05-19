@@ -19,7 +19,8 @@ slackController.logMessage = (req, res, next) => {
 }
 
 slackController.filterBotMessages = (req, res, next) => {
-    if (req.body?.authorizations[0]?.is_bot === false && !req.body.bot_profile) return next();
+    // if (req.body?.authorizations[0]?.is_bot === false && !req.body.bot_profile) return next();
+    console.log(req.body);
     return next({
         log: "error in slackController.filterBotMessages",
         message: { err: 'There was an error with your post request' },
