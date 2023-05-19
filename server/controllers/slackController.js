@@ -14,12 +14,13 @@ slackController.logMessage = (req, res, next) => {
 }
 
 slackController.filterBotMessages = (req, res, next) => {
+    console.log('req.body is: ', req.body);
     if (!req.body.event.client_msg_id || req.body.event.bot_id) {
         return res.status(200).json(req.body.challenge);
     }
     else if (req.body.event.client_msg_id && req.body.event.bot_id === undefined) {
         return next();
-    } 
+    }
     else {
         return next({
             log: "error in slackController.filterBotMessages",
