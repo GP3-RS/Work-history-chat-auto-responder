@@ -7,7 +7,7 @@ import { Configuration, OpenAIApi } from "openai";
 
 import { fileURLToPath } from 'url';
 
-import messages from '../../messages';
+import messages from '../../messages.js';
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -30,6 +30,7 @@ chatGPTController.generateResponse = async (req, res, next) => {
         messages: [
             {"role": "system", "content": process.env.PROMPT},
             {"role": "user", "content": "here is Gahl's resume, answer questions as if you are him, using his resume" + resume},
+            messages,
             {"role": "user", "content": req.body.event.text}
         ],
         temperature: 0.1,
