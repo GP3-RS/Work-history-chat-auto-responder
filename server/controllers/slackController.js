@@ -19,7 +19,7 @@ slackController.logMessage = (req, res, next) => {
 }
 
 slackController.filterBotMessages = (req, res, next) => {
-    if (req.body.event.client_msg_id && !req.body.event.bot_id === undefined) return next();
+    if (req.body.event.client_msg_id && req.body.event.bot_id === undefined) return next();
     return next({
         log: "error in slackController.filterBotMessages",
         message: { err: 'There was an error with your post request' },
