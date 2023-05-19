@@ -28,8 +28,8 @@ slackController.filterBotMessages = (req, res, next) => {
     }
 };
 
-slackController.postMessage = (req, res, next) => {
-    if (!res.locals.response) return next();
+slackController.postMessage = (req, res) => {
+    if (!res.locals.response) return;
 
     let payload = {
         channel: process.env.CHANNEL_NAME,
@@ -50,9 +50,6 @@ slackController.postMessage = (req, res, next) => {
         throw new Error(`Server error ${res.status}`);
         }
         return res.json();
-    })
-    .then(data => {
-        return next();
     })
     .catch((error) => {
         console.log('ERROR IN POSTMESSAGE:', error);
