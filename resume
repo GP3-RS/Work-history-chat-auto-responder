@@ -1,44 +1,66 @@
 Gahl Peled Resume 
+
 Skills: 
-    TypeScript, JavaScript, React, Redux, Node.js, Express, SQL, PostgreSQL, MongoDB, Redis, HTML5, Sass/SCSS, CSS, testing (Jest, Puppeteer, React Testing Library, Cypress), Webpack, Electron, Material-UI, Tailwind, Kubernetes, Docker, AWS, OAuth 2.0, WebSockets, WebRTC, RESTful API, GraphQL, Travis CI, Git/GitHub, Object-Oriented Programming. 
+    TypeScript, JavaScript, React, Redux, Node.js, Express, SQL, PostgreSQL, MongoDB, Redis, HTML5, Sass/SCSS, CSS, testing (Jest, Puppeteer, React Testing Library, Cypress), Webpack, Electron, Material-UI, Tailwind, Kubernetes, Docker, AWS, OAuth 2.0, WebSockets, WebRTC, RESTful API, GraphQL, Travis CI, Git/GitHub, Object-Oriented Programming.
+
+Summary:
+    I’m a full stack software engineer working day-to-day with React, TypeScript, Node/Express, MongoDB, etc. I’ve also worked on several open-source products, including one that prevents Lambda function cold starts, a React Native prototyping tool, and a microservices performance monitoring/graphing tool. My most revent work is for an educational platform, Codesmith, building features with React to increase user interaction, modifying their Auth API to improve security, and developing internal tooling to increase production and developer experience, among other things. I also gave a talk about WebTransport as part of the TechTalk series sponsored by Jeeny and Bractlet.
+
 Work Experience: 
     Company: Codesmith 
         Title: Software Engineer 
         Dates of Employment: January 2023 - May 2023
         Reason for Leaving: Contract-based role. Contract ended.
-        Developed features and components with React/Redux, including an RSVP management feature to view and cancel
-        users workshop RSVPs, resulting in an immediate increase in workshop attendance and a decrease in no-shows
-        Designed an approach to integration tests for write features by creating functions to mock various app states and http
-        requests within Jest, increasing test coverage by about 20% and serving as a template for future write-based tests
-        Improved the reliability, data validation, and error handling of the authorization API by replacing query utils with
-        models in PostgreSQL queries, resulting in reduced vulnerability to SQL injection attacks
-        Used Cypress for end-to end tests to ensure compatibility, improve code quality, increase scalability, and make it
-        easier to onboard newer developers who can start contributing without merging breaking changes
-        Mentored junior engineers through code reviews, pair programming, and knowledge transfers, working on algorithmic
-        best practices for the given technical requirements and optimal time/space complexity
-        Led Scrum meetings to help reprioritize targets and facilitate launch for open source tooling
+        1. Developed features and components with React/Redux, including an RSVP management feature to view and cancel users workshop RSVPs, resulting in an immediate increase in workshop attendance and a decrease in no-shows.
+        2. Designed an approach to integration tests for write features by creating functions to mock various app states and http requests within Jest, increasing test coverage by about 20% and serving as a template for future write-based tests.
+        3. Improved the reliability, data validation, and error handling of the authorization API by replacing query utils with models in PostgreSQL queries, resulting in reduced vulnerability to SQL injection attacks.
+        4. Used Cypress for end-to end tests to ensure compatibility, improve code quality, increase scalability, and make it easier to onboard newer developers who can start contributing without merging breaking changes.
+        5. Mentored junior engineers through code reviews, pair programming, and knowledge transfers, working on algorithmic best practices for the given technical requirements and optimal time/space complexity.
+        6. Led Scrum meetings to help reprioritize targets and facilitate launch for open source tooling.
     Company: Chronos (Open Source Product)
         Title: Software Engineer
         Dates of Employment: October 2022 - January 2023
-        Utilized Kubernetes DNS to query Prometheus monitoring server, gathering data on K8s clusters and exporting data
-        to user-specified SQL or NoSQL database, enabling engineers to make data-driven decisions about their microservices
-        Scaled app by adding a tab to the React/Redux frontend, allowing users to select which metrics they would like to
-        record to their database, resulting in significantly reduced database bloat for users from interval-based database writes
-        Migrated to TypeScript for its strict, automated type-checking for faster debugging, enhancing future development by
-        making code more predictable, and because our product prioritized scalability over development speed
-        Audited all dependencies and removed or updated node modules to eliminate vulnerabilities and technical debt,
-        resulting in a lighter app with 50% faster compilation and more responsive hot module replacement
-        Rebuilt Chronos’s front-end data-visualization app to enable compatibility with ARM-64 Apple “M” architecture
-        Chronos is an open source product developed under tech accelerator OS Labs
+        1. Utilized Kubernetes DNS to query Prometheus monitoring server, gathering data on K8s clusters and exporting data to user-specified SQL or NoSQL database, enabling engineers to make data-driven decisions about their microservices.
+        2. Scaled app by adding a tab to the React/Redux frontend, allowing users to select which metrics they would like to record to their database, resulting in significantly reduced database bloat for users from interval-based database writes.
+        3. Migrated to TypeScript for its strict, automated type-checking for faster debugging, enhancing future development by making code more predictable, and because our product prioritized scalability over development speed.
+        4. Audited all dependencies and removed or updated node modules to eliminate vulnerabilities and technical debt, resulting in a lighter app with 50% faster compilation and more responsive hot module replacement.
+        5. Rebuilt Chronos’s front-end data-visualization app to enable compatibility with ARM-64 Apple “M” architecture.
+        6. Chronos is an open source product developed under tech accelerator OS Labs.
     Company: CliniConnects
         Title: Operations and Product Manager
         Dates of Employment: January 2019 - October 2022
-        Worked with lead engineer and CTO to ideate, test, and deploy new features for enterprise-grade, HIPAA-compliant
-        remote workforce management application that was built with Angular and deployed on Microsoft Azure
-        Led scrum meetings with the engineering team to guide the development of clinician credentialing and staff
-        auto-assignment features that enabled higher compliance rates and faster scheduling, reducing wait times for patients
+        Reason for leaving: Wanted to learn about software engineering.
+        1. Worked with lead engineer and CTO to ideate, test, and deploy new features for enterprise-grade, HIPAA-compliant remote workforce management application that was built with Angular and deployed on Microsoft Azure
+        2. Led scrum meetings with the engineering team to guide the development of clinician credentialing and staff auto-assignment features that enabled higher compliance rates and faster scheduling, reducing wait times for patients
+        Summary of experience at CliniConnects: At CliniConnects, my team and I created an application that manages the patient matching process and helps run key daily operations while integrating with other industry-standard software along the way. I worked with the CTO and engineers to ideate and build out solutions for industry-wide problems. Specifically, I was responsible for building out two features that were key to CliniConnects adoption in the broader healthcare market: a feature that allowed independent contractor clinicians to negotiate their rate on a case-by-case basis, and a feature that allows healthcare agencies to automatically keep track of clinician credentials, and remind to update, or deactivate the clinician if necessary. I worked on many other products and initiatives along the way, but those are the two that I'm the most proud of because they had an immediate impact on CliniConnects' adoption, growth, and user satisfaction.
+    Company: FeldCare Connects
+        Title: Operations Manager
+        Dates of Employment: August 2014 - August 2019
+        Summary of experience at FeldCare Connects: As part of the FeldCare Connects team, I partnered with home healthcare agencies to provide patients with quality in-home therapy care. I promoted FeldCare's vision of advancing our reputation with integrity and exceptional service. I used this passion towards forming the company image, expanding operations, building partnerships with key healthcare professionals, hiring qualified and passionate administrative personnel, and directing company policy towards greater efficiency in delivering patient care.
+
 OPEN SOURCE PROJECTS:
     Project Name: Golbin Shark
+        Description: Social Media Application for Codesmith alumni.
+        1. Architected a single page app to view, filter, and search peers’ current job, salary, contact info, and other details, allowing users to easily network, gain referrals, and view the progress of their peers in their careers.
+        2. Implemented OAuth Login by integrating Google’s OAuth 2.0, establishing stronger authentication protocols while abstracting security concerns/issues away from the codebase streamlining the login process for the user.
+        3. Created a web service with Node/Express and PostgreSQL, allowing users to access the network and invite new users.
+    Project Name: MotoMinder
+        Description: Automotive or Motorcycle Maintanence Tracker.
+        1. Implemented a NoSQL database (MongoDB) for scalability, flexibility, and performance, allowing for dynamic schema design and efficient real-time data processing, while handling concurrent requests.
+        2. Configured webpack with hot module reloading, ES6+ transpilation, minification, and uglification to optimize development experience/speed, and improve user experience by increasing performance.
+        3. Architected Node.js/Express server, relying on Node’s event-driven, non-blocking architecture to efficiently respond to a series of endpoints based on middleware design pattern, using routers and controllers to modularize back-end.
+    Project Name: Devle
+        Description: Devle is a fun game that allows Javascript engineers to test their knowledge of native Javascript methods, like Array methods. It's similar to Wordle in that you're provided with a definition, and you are able to make up to 5 attempts before you lose. There's a new word every day. My favorite part of working on this project was the obscuring algorithm: that was the method used to obscure various parts of the definition and incrementally reveal more as more attempts were made.
+
+EDUCATION:
+    University of California, Santa Barbara
+    Graduated 2014
+    Bachelor of Arts
 
 INTERESTS:
     Motorcycles, Scuba diving, Rock climbing, escape rooms, travel, dancing (bachata, salsa), formula one
+
+LANGUAGES:
+    1. English. Proficiency: Fluent/native.
+    2. Spanish. Proficiency: Intermediate/conversational.
+    3. Hebrew. Proficiency: Elementary.
