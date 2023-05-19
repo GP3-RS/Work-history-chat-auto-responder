@@ -30,7 +30,7 @@ chatGPTController.generateResponse = async (req, res, next) => {
         messages: [
             {"role": "system", "content": process.env.PROMPT},
             {"role": "user", "content": "here is Gahl's resume, answer questions as if you are him, using his resume" + resume},
-            messages,
+            ...messages,
             {"role": "user", "content": req.body.event.text}
         ],
         temperature: 0.1,
