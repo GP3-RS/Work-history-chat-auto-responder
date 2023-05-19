@@ -20,11 +20,15 @@ slackController.logMessage = (req, res, next) => {
 }
 
 slackController.filterBotMessages = (req, res, next) => {
+    console.log(req.body);
+    console.log(req.body.)
     if (req.body.authorizations[0].is_bot) return res.status(200).json(req.body.challenge);
     else return next();
 }
 
 slackController.postMessage = (req, res, next) => {
+
+    console.log('slack token', process.env.SLACK_BOT_TOKEN)
   fetch("https://slack.com/api/chat.postMessage", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -36,6 +40,7 @@ slackController.postMessage = (req, res, next) => {
     },
     })
     .then((res) => {
+        console.log(process.env.SLACK_BOT_TOKEN)
         console.log(res.body);
         if (!res.ok) {
         throw new Error(`Server error ${res.status}`);
