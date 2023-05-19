@@ -14,16 +14,19 @@ slackController.urlVerification = (req, res, next) => {
 }
 
 slackController.filterBotMessages = (req, res, next) => {
-    res.status(200).json('OK');
     if (req.body.event.client_msg_id && req.body.event.bot_id === undefined) {
+        res.locals.platform = 'slack';
         res.locals.question = req.body.event.text;
         return next();
+    }
+    else {
+        return res.status(200).json('OK');
     }
 };
 
 slackController.postMessage = (req, res) => {
+    console.log('IN SLACKCONTROLLER POSTMESSAGE. RESPONSE IS: ', res.locals.response)
     if (!res.locals.response) return;
-
     let payload = {
         channel: process.env.CHANNEL_NAME,
         text: res.locals.response
