@@ -9,4 +9,8 @@ router.post('/slack', slackController.urlVerification, slackController.filterBot
   return res.status(200).json(req.body.challenge);
 });
 
+router.post('/website', chatGPTController.generateResponse, (req, res) => {
+  res.status(200).json(res.locals.payload);
+})
+
 export default router;
