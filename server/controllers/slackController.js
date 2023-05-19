@@ -15,23 +15,18 @@ slackController.testServer = (req, res, next) => {
 }
 
 slackController.logMessage = (req, res, next) => {
-    console.log('is bot? ', req.body.authorizations[0].is_bot);
     return next();
 }
 
 slackController.filterBotMessages = (req, res, next) => {
-    console.log(req.body);
-    console.log(req.body.authorizations[0].is_bot)
-    if (req.body.authorizations[0].is_bot || req.body?.message?.bot_id || req.body?.message?.bot_profile) return next({
+    if (req.body?.authorizations[0]?.is_bot === false && !req.body.bot_profile) return next();
+    return next({
         log: "error in slackController.filterBotMessages",
         message: { err: 'There was an error with your post request' },
     });
-    return next();
 }
 
 slackController.postMessage = (req, res, next) => {
-
-    console.log('slack token', process.env.SLACK_BOT_TOKEN)
   fetch("https://slack.com/api/chat.postMessage", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -43,19 +38,16 @@ slackController.postMessage = (req, res, next) => {
     },
     })
     .then((res) => {
-        console.log(process.env.SLACK_BOT_TOKEN)
-        console.log(res.body);
         if (!res.ok) {
         throw new Error(`Server error ${res.status}`);
         }
         return res.json();
     })
     .then(data => {
-        console.log(data);
-        return next()
+        return next();
     })
     .catch((error) => {
-        console.log(error);
+        console.log('ERROR IN POSTMESSAGE:', error);
     })
 }
 
