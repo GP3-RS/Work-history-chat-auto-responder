@@ -47,6 +47,10 @@ chatGPTController.generateResponse = (req, res, next) => {
 
           const text = response.data.choices[0].message.content.trim().replace(/(\r\n|\n|\r)/gm, "");
 
+          console.log('text is', text);
+          console.log(res.locals.platform);
+          console.log(res.locals.platform === 'slack')
+
           if (res.locals.platform === 'slack') {
 
             console.log('GENERATING RESPONSE');
