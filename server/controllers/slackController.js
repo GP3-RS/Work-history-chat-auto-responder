@@ -34,12 +34,13 @@ slackController.filterBotMessages = (req, res, next) => {
 };
 
 slackController.postMessage = (req, res, next) => {
+    console.log(res.locals.response);
+
   fetch("https://slack.com/api/chat.postMessage", {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify(res.locals.response),
     headers: {
         "Content-Type": "application/json; charset=utf-8",
-        "Content-Length": payload.length,
         Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
         Accept: "application/json",
     },
