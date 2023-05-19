@@ -34,11 +34,13 @@ slackController.filterBotMessages = (req, res, next) => {
 };
 
 slackController.postMessage = (req, res, next) => {
-    console.log(res.locals.response);
+    console.log('in postMessage, res.locals.response is ', res.locals.response);
+
+    console.log('typeof is ', typeof res.locals.response);
 
   fetch("https://slack.com/api/chat.postMessage", {
     method: "POST",
-    body: JSON.stringify(res.locals.response),
+    body: res.locals.response,
     headers: {
         "Content-Type": "application/json; charset=utf-8",
         Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,

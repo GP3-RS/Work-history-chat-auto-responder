@@ -7,7 +7,9 @@ app.use(express.json());
 
 import apiRouter from './server/routes/api.js'
 
-app.use('/', apiRouter);
+
+//APP TURNED OFF TO SAVE MONEY LOL
+// app.use('/', apiRouter);
 
 app.use((req, res) => res.sendStatus(404));
 

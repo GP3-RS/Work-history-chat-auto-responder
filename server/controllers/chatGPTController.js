@@ -69,10 +69,15 @@ chatGPTController.generateResponse = async (req, res, next) => {
         max_tokens: 1000,
       });
 
-    console.log('RESPONSE FROM CHATGPT IS', response.data.choices[0].text.trim())
+    const text = response.data.choices[0].text.trim().replace(/(\r\n|\n|\r)/gm, "");
 
-    res.locals.response = response.data.choices[0].text.trim();
-    next();
+    console.log('text is ', text);
+
+    console.log('RESPONSE FROM CHATGPT IS', text);
+    console.log('data type is', typeof text);
+
+    res.locals.response = text;
+    return next();
 }
 
 export default chatGPTController;
