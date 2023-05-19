@@ -8,6 +8,11 @@ slackController.logMessage = (req, res, next) => {
     return next();
 }
 
+slackController.urlVerification = (req, res, next) => {
+    if (req.body.challenge && req.body.type === "url_verification") return res.status(200).json(req.body.challenge);
+    else return next();
+}
+
 slackController.filterBotMessages = (req, res, next) => {
     if (!req.body.event.client_msg_id || req.body.event.bot_id) {
         return res.status(200).json(req.body.challenge);
@@ -30,7 +35,7 @@ slackController.postMessage = (req, res, next) => {
         channel: process.env.CHANNEL_NAME,
         text: res.locals.response
       }
-      
+
   fetch("https://slack.com/api/chat.postMessage", {
     method: "POST",
     body: JSON.stringify(payload),
