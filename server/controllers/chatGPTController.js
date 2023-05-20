@@ -62,9 +62,10 @@ eventEmitter.on("generateAndPost", async (data) => {
         { role: "user", content: data.question },
       ],
       temperature: 0.1,
-      max_tokens: 500,
+      max_tokens: 1000,
     })
     .then((response) => {
+      if (!response.ok) console.log("ERROR ERROR ERROR", response);
       console.log("response is", response);
 
       if (!response) throw new Error("no response");
