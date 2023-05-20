@@ -55,10 +55,9 @@ eventEmitter.on("generateAndPost", async (data) => {
         {
           role: "user",
           content:
-            "here is Gahl's resume, answer questions as if you are him, using his resume" +
+            "here is Gahl's resume, answer questions as if you are him, using his resume: " +
             resume,
         },
-        ...messages,
         { role: "user", content: data.question },
       ],
       temperature: 0.1,
