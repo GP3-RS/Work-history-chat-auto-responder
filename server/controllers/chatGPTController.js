@@ -47,7 +47,7 @@ chatGPTController.generateResponse = (req, res, next) => {
 eventEmitter.on("generateAndPost", async (data) => {
   console.log("data is", data);
 
-  await openai
+  const response = await openai
     .createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
@@ -64,51 +64,53 @@ eventEmitter.on("generateAndPost", async (data) => {
       temperature: 0.1,
       max_tokens: 1000,
     })
-    .then((response) => {
-      if (!response.ok) console.log("ERROR ERROR ERROR", response);
-      console.log("response is", response);
+    .catch((err) =>
+      console.log("error with openai.createchatcompleteion ", err)
+    );
 
-      if (!response) throw new Error("no response");
-      else if (response?.data?.error) throw new Error(response.data.error);
+  if (!response.ok) console.log("ERROR, Response NOT OK ", response);
+  console.log("response is", response);
 
-      const text = response.data.choices[0].message.content
-        .trim()
-        .replace(/(\r\n|\n|\r)/gm, "");
+  if (!response) throw new Error("no response");
+  else if (response?.data?.error) throw new Error(response.data.error);
 
-      console.log("text is", text);
-      console.log(data);
-      console.log(data.platform === "slack");
+  const text = response.data.choices[0].message.content
+    .trim()
+    .replace(/(\r\n|\n|\r)/gm, "");
 
-      if (data.platform === "slack") {
-        console.log("GENERATING RESPONSE");
+  console.log("text is", text);
+  console.log(data);
+  console.log(data.platform === "slack");
 
-        let payload = {
-          channel: process.env.CHANNEL_NAME,
-          text,
-        };
+  if (data.platform === "slack") {
+    console.log("GENERATING RESPONSE");
 
-        fetch("https://slack.com/api/chat.postMessage", {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
-            Accept: "application/json",
-          },
-        })
-          .then((resp) => {
-            if (!resp.ok) {
-              throw new Error(`Server error ${res.status}`);
-            }
-            return resp.json();
-          })
-          .catch((error) => {
-            console.log("ERROR IN POSTMESSAGE:", error);
-          });
-      }
-      return;
+    let payload = {
+      channel: process.env.CHANNEL_NAME,
+      text,
+    };
+
+    fetch("https://slack.com/api/chat.postMessage", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+        Accept: "application/json",
+      },
     })
-    .catch((err) => console.log(err));
+      .then((resp) => {
+        if (!resp.ok) {
+          throw new Error(`Server error ${res.status}`);
+        }
+        return resp.json();
+      })
+      .catch((error) => {
+        console.log("ERROR IN POSTMESSAGE:", error);
+      });
+  }
+
+  return;
 });
 
 export default chatGPTController;
