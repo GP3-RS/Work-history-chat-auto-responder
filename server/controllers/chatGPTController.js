@@ -34,7 +34,7 @@ chatGPTController.generateResponse = (req, res, next) => {
   console.log("hitting chatGPTController.generateResponse");
   console.log("res.locals is", res.locals);
 
-  if (res.locals.question.length === 0) return next();
+  // if (res.locals.question.length === 0) return next();
 
   openai
     .createChatCompletion({
