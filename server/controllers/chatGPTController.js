@@ -56,8 +56,9 @@ eventEmitter.on("generateAndPost", async (data) => {
           role: "user",
           content:
             "here is Gahl's resume, answer questions as if you are him, using his resume" +
-            "resume",
+            resume,
         },
+        ...messages,
         { role: "user", content: data.question },
       ],
       temperature: 0.1,
@@ -67,7 +68,6 @@ eventEmitter.on("generateAndPost", async (data) => {
       console.log("error with openai.createchatcompleteion ", err)
     );
 
-  if (!response.ok) console.log("ERROR, Response NOT OK ", response);
   console.log("response is", response);
 
   if (!response) throw new Error("no response");
