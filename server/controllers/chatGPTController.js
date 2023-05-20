@@ -5,6 +5,10 @@ dotenv.config();
 
 import fetch from "node-fetch";
 
+import EventEmitter from "events";
+
+const eventEmitter = new EventEmitter();
+
 import { Configuration, OpenAIApi } from "openai";
 
 import { fileURLToPath } from "url";
@@ -34,7 +38,14 @@ chatGPTController.generateResponse = (req, res, next) => {
   console.log("hitting chatGPTController.generateResponse");
   console.log("res.locals is", res.locals);
 
-  // if (res.locals.question.length === 0) return next();
+  if (res.locals.question.length === 0) return next();
+
+  eventEmitter.emit("generateAndPost", res.locals);
+  return next();
+};
+
+eventEmitter.on("generateAndPost", async (data) => {
+  console.log("data is", data);
 
   openai
     .createChatCompletion({
@@ -48,7 +59,7 @@ chatGPTController.generateResponse = (req, res, next) => {
             resume,
         },
         ...messages,
-        { role: "user", content: res.locals.question },
+        { role: "user", content: data.question },
       ],
       temperature: 0.1,
       max_tokens: 500,
@@ -64,10 +75,10 @@ chatGPTController.generateResponse = (req, res, next) => {
         .replace(/(\r\n|\n|\r)/gm, "");
 
       console.log("text is", text);
-      console.log(res.locals.platform);
-      console.log(res.locals.platform === "slack");
+      console.log(data);
+      console.log(data.platform === "slack");
 
-      if (res.locals.platform === "slack") {
+      if (data.platform === "slack") {
         console.log("GENERATING RESPONSE");
 
         let payload = {
@@ -84,11 +95,11 @@ chatGPTController.generateResponse = (req, res, next) => {
             Accept: "application/json",
           },
         })
-          .then((res) => {
-            if (!res.ok) {
+          .then((resp) => {
+            if (!resp.ok) {
               throw new Error(`Server error ${res.status}`);
             }
-            return res.json();
+            return resp.json();
           })
           .catch((error) => {
             console.log("ERROR IN POSTMESSAGE:", error);
@@ -97,8 +108,6 @@ chatGPTController.generateResponse = (req, res, next) => {
       return;
     })
     .catch((err) => console.log(err));
-
-  return next();
-};
+});
 
 export default chatGPTController;
