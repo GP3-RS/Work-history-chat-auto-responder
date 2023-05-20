@@ -47,7 +47,7 @@ chatGPTController.generateResponse = (req, res, next) => {
 eventEmitter.on("generateAndPost", async (data) => {
   console.log("data is", data);
 
-  openai
+  await openai
     .createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
