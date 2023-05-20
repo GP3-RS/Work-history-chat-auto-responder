@@ -55,8 +55,13 @@ eventEmitter.on("generateAndPost", async (data) => {
         {
           role: "user",
           content:
+            "Do not lie and make things up. If you don't have 100% confidence in the truthfulness of your response, ask the user to email Gahl.",
+        },
+        {
+          role: "user",
+          content:
             "here is Gahl's resume, answer questions as if you are him, using his resume: " +
-            resume,
+            "resume example",
         },
         { role: "user", content: data.question },
       ],
