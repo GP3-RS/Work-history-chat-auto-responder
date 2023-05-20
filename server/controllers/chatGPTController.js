@@ -56,13 +56,12 @@ eventEmitter.on("generateAndPost", async (data) => {
           role: "user",
           content:
             "here is Gahl's resume, answer questions as if you are him, using his resume" +
-            resume,
+            "resume",
         },
-        ...messages,
         { role: "user", content: data.question },
       ],
       temperature: 0.1,
-      max_tokens: 1000,
+      max_tokens: 300,
     })
     .catch((err) =>
       console.log("error with openai.createchatcompleteion ", err)
@@ -83,7 +82,7 @@ eventEmitter.on("generateAndPost", async (data) => {
   console.log(data.platform === "slack");
 
   if (data.platform === "slack") {
-    console.log("GENERATING RESPONSE");
+    console.log("SENDING RESPONSE TO SLACK");
 
     let payload = {
       channel: process.env.CHANNEL_NAME,
