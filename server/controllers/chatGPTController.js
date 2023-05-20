@@ -2,29 +2,23 @@ import * as dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 dotenv.config();
-
 import fetch from "node-fetch";
 
 import EventEmitter from "events";
-
 const eventEmitter = new EventEmitter();
 
 import { Configuration, OpenAIApi } from "openai";
-
 import { fileURLToPath } from "url";
 
 import messages from "../../messages.js";
 
 const __filename = fileURLToPath(import.meta.url);
-
 const __dirname = path.dirname(__filename);
 
 const resume = fs.readFileSync(path.resolve(__dirname + "../../../resume"), {
   encoding: "utf8",
   flag: "r",
 });
-
-// console.log(resume);
 
 const openai = new OpenAIApi(
   new Configuration({
@@ -36,7 +30,6 @@ const chatGPTController = {};
 
 chatGPTController.generateResponse = (req, res, next) => {
   console.log("hitting chatGPTController.generateResponse");
-  console.log("res.locals is", res.locals);
 
   if (res.locals.question.length === 0) return next();
 
@@ -45,8 +38,6 @@ chatGPTController.generateResponse = (req, res, next) => {
 };
 
 eventEmitter.on("generateAndPost", async (data) => {
-  console.log("data is", data);
-
   const response = await openai
     .createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -72,18 +63,12 @@ eventEmitter.on("generateAndPost", async (data) => {
       console.log("error with openai.createchatcompleteion ", err)
     );
 
-  console.log("response is", response);
-
   if (!response) throw new Error("no response");
   else if (response?.data?.error) throw new Error(response.data.error);
 
   const text = response.data.choices[0].message.content
     .trim()
     .replace(/(\r\n|\n|\r)/gm, "");
-
-  console.log("text is", text);
-  console.log(data);
-  console.log(data.platform === "slack");
 
   if (data.platform === "slack") {
     console.log("SENDING RESPONSE TO SLACK");
