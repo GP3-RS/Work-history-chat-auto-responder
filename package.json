@@ -5,6 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
+    "prestart": "redis-server",
     "test": "test"
   },
   "repository": {
