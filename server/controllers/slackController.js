@@ -26,31 +26,4 @@ slackController.filterBotMessages = (req, res, next) => {
   }
 };
 
-slackController.postMessage = (req, res) => {
-  if (!res.locals.response) return;
-  let payload = {
-    channel: process.env.CHANNEL_NAME,
-    text: res.locals.response,
-  };
-
-  fetch("https://slack.com/api/chat.postMessage", {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
-      Accept: "application/json",
-    },
-  })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(`Server error ${res.status}`);
-      }
-      return res.json();
-    })
-    .catch((error) => {
-      console.log("ERROR IN POSTMESSAGE:", error);
-    });
-};
-
 export default slackController;
