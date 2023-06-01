@@ -3,10 +3,11 @@ import fs from "fs";
 import path from "path";
 dotenv.config();
 import fetch from "node-fetch";
-import redis from "redis";
 
 import { Configuration, OpenAIApi } from "openai";
 import { fileURLToPath } from "url";
+
+import cache from "./cache.js";
 
 //Import our series of messages to help train chatGPT before each response so that it answers correctly
 import messages from "../messages.js";
@@ -27,32 +28,28 @@ const openai = new OpenAIApi(
   })
 );
 
-let redisClient;
-
-(async () => {
-  redisClient = redis.createClient();
-
-  redisClient.on("error", (error) => console.error(`Error : ${error}`));
-
-  await redisClient.connect().then((_) => console.log("Connected to Redis"));
-})();
-
 import EventEmitter from "events";
 const eventEmitter = new EventEmitter();
 
 const responseHelper = {};
 
 responseHelper.generateAndPost = (data) => {
+  console.log("hitting responseHelper.generateAndPost");
+
   eventEmitter.emit("generateAndPost", data);
 };
 
 eventEmitter.on("generateAndPost", async (data) => {
+  console.log("hitting eventEmitter");
   let responseMessage;
 
-  const cacheResults = await redisClient.get(data.question);
+  let cacheResults = await cache.get(data.question);
+
+  cacheResults =
+    process.env.CACHE === "Redis" ? cacheResults : cacheResults?.props?.value;
 
   if (!cacheResults) {
-    console.log("Redis cache miss");
+    console.log(process.env.CACHE + " cache miss");
 
     const responseObj = await openai
       .createChatCompletion({
@@ -87,12 +84,15 @@ eventEmitter.on("generateAndPost", async (data) => {
       .trim()
       .replace(/(\r\n|\n|\r)/gm, "");
 
-    redisClient.set(data.question, responseMessage);
+    process.env.CACHE === "Redis"
+      ? cache.set(data.question, responseMessage)
+      : cache.set(data.question, { value: responseMessage });
   } else {
     responseMessage =
-      "This was a cache hit. Looks like someone asked this question before. Response: " +
+      "Cache hit! Someone has asked this question before. Response: " +
       cacheResults;
-    console.log("Redis cache hit");
+
+    console.log(process.env.CACHE + " cache hit");
   }
 
   if (data.platform === "slack") {
