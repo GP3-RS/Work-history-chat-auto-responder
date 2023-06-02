@@ -40,7 +40,7 @@ responseHelper.generateAndPost = (data) => {
 };
 
 eventEmitter.on("generateAndPost", async (data) => {
-  console.log("hitting eventEmitter");
+  console.log("hitting eventEmitter: generateAndPost");
   let responseMessage;
 
   let cacheResults = await cache.get(data.question);
@@ -48,7 +48,7 @@ eventEmitter.on("generateAndPost", async (data) => {
   cacheResults =
     process.env.CACHE === "Redis" ? cacheResults : cacheResults?.props?.value;
 
-  if (!cacheResults) {
+  if (cacheResults === null || cacheResults === undefined) {
     console.log(process.env.CACHE + " cache miss");
 
     const responseObj = await openai
@@ -74,19 +74,29 @@ eventEmitter.on("generateAndPost", async (data) => {
         max_tokens: 400,
       })
       .catch((err) =>
-        console.log("error with openai.createchatcompleteion ", err)
+        console.log("error with openai.createChatCompleteion ", err)
       );
 
-    if (!responseObj) throw new Error("no response");
-    else if (responseObj?.data?.error) throw new Error(response.data.error);
+    if (!responseObj) {
+      console.log("No response from openai.generate response invocation");
+      throw new Error("no response");
+    } else if (responseObj?.data?.error) {
+      console.log("ERROR with generating a response: ", response.data.error);
+      throw new Error(response.data.error);
+    }
 
     responseMessage = responseObj.data.choices[0].message.content
       .trim()
       .replace(/(\r\n|\n|\r)/gm, "");
 
-    process.env.CACHE === "Redis"
-      ? cache.set(data.question, responseMessage)
-      : cache.set(data.question, { value: responseMessage });
+    await cache
+      .set(
+        data.question,
+        process.env.CACHE === "Redis"
+          ? responseMessage
+          : { value: responseMessage }
+      )
+      .catch((err) => console.log("error in cache.set: ", err));
   } else {
     responseMessage =
       "Cache hit! Someone has asked this question before. Response: " +
@@ -123,7 +133,7 @@ responseHelper.postToSlack = (text) => {
   })
     .then((resp) => {
       if (!resp.ok) {
-        throw new Error(`Server error: 500`);
+        console.log("Response not OK: ", resp);
       }
       return resp.json();
     })
