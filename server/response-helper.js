@@ -11,6 +11,7 @@ import cache from "./cache.js";
 
 //Import our series of messages to help train chatGPT before each response so that it answers correctly
 import messages from "../messages.js";
+console.log("messages import: ", messages ? "PASS" : "FAIL");
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,6 +21,7 @@ const resume = fs.readFileSync(path.resolve(__dirname + "../../resume"), {
   encoding: "utf8",
   flag: "r",
 });
+console.log("resume import: ", resume ? "PASS" : "FAIL");
 
 //Initialize and configure OpenAI API
 const openai = new OpenAIApi(
@@ -27,6 +29,7 @@ const openai = new OpenAIApi(
     apiKey: process.env.OPENAI_TOKEN,
   })
 );
+console.log("openai configuration: ", openai ? "PASS" : "FAIL");
 
 import EventEmitter from "events";
 const eventEmitter = new EventEmitter();
