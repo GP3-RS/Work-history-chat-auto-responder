@@ -41,14 +41,16 @@ responseHelper.generateAndPost = (data) => {
 
 eventEmitter.on("generateAndPost", async (data) => {
   console.log("hitting eventEmitter: generateAndPost");
-  let responseMessage, responseObj;
+  let responseMessage, responseObj, cacheResults;
 
-  let cacheResults = await cache.get(data.question);
+  try {
+    cacheResults = await cache.get(data.question);
+  } catch (err) {
+    console.log("Error in cache.get(data.question): ", err);
+  }
 
   cacheResults =
     process.env.CACHE === "Redis" ? cacheResults : cacheResults?.props?.value;
-
-  console.log("cacheResults is: ", cacheResults);
 
   if (cacheResults === null || cacheResults === undefined) {
     console.log(process.env.CACHE + " cache miss");
@@ -80,8 +82,6 @@ eventEmitter.on("generateAndPost", async (data) => {
       console.log("Error with openai.createChatCompletion: ", err);
       throw new Error(err);
     }
-
-    console.log("responseObj is: ", responseObj);
 
     if (!responseObj) {
       console.log("No response from openai.generate response invocation");
@@ -145,13 +145,17 @@ responseHelper.postToSlack = (text) => {
     },
   })
     .then((resp) => {
-      if (!resp.ok) {
+      console.log("resp.ok is: ", resp.ok);
+      if (!resp?.ok) {
         console.log("Response not OK: ", resp);
+        throw new Error("Response not OK: " + resp.status);
       }
     })
     .catch((error) => {
       console.log("ERROR IN POSTMESSAGE:", error);
     });
+
+  return;
 };
 
 export default responseHelper;
