@@ -43,9 +43,14 @@ responseHelper.generateAndPost = async (data) => {
     (async () => {
       try {
         console.log("hitting generateAndPost");
-        let cacheResults = await cache.get(data.question);
 
-        let responseMessage, responseObj;
+        let responseMessage, responseObj, cacheResults;
+
+        try {
+          cacheResults = await cache.get(data.question);
+        } catch (err) {
+          console.log("Error with cache.get(data.question): ", err);
+        }
 
         cacheResults =
           process.env.CACHE === "Redis"
