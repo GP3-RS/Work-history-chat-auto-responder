@@ -72,6 +72,7 @@ eventEmitter.on("generateAndPost", async (data) => {
         ],
         temperature: 0.1,
         max_tokens: 400,
+        top_p: 0.5,
       });
     } catch (err) {
       console.log("Error with openai.createChatCompletion: ", err);
