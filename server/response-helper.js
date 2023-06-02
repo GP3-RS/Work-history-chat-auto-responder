@@ -32,7 +32,7 @@ const openai = new OpenAIApi(
 console.log("openai configuration: ", openai ? "PASS" : "FAIL");
 
 import EventEmitter from "events";
-const eventEmitter = new EventEmitter();
+const eventEmitter = new EventEmitter({ captureRejections: true });
 
 const responseHelper = {};
 
