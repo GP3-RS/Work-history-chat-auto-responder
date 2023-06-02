@@ -118,6 +118,10 @@ eventEmitter.on("generateAndPost", async (data) => {
   return;
 });
 
+eventEmitter.on("error", (error) => {
+  console.error("An error occurred within the EventEmitter:", error);
+});
+
 responseHelper.postToSlack = (text) => {
   console.log("SENDING RESPONSE TO SLACK");
 
