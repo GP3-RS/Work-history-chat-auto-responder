@@ -48,6 +48,8 @@ eventEmitter.on("generateAndPost", async (data) => {
   cacheResults =
     process.env.CACHE === "Redis" ? cacheResults : cacheResults?.props?.value;
 
+  console.log("cacheResults is: ", cacheResults);
+
   if (cacheResults === null || cacheResults === undefined) {
     console.log(process.env.CACHE + " cache miss");
 
