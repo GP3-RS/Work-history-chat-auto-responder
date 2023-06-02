@@ -46,11 +46,12 @@ responseHelper.generateAndPost = (data) => {
 
         let responseMessage, responseObj, cacheResults;
 
-        try {
-          cacheResults = await cache.get(data.question);
-        } catch (err) {
-          console.log("Error with cache.get(data.question): ", err);
-        }
+        // try {
+        //   cacheResults = await cache.get(data.question);
+        // } catch (err) {
+        //   console.log("Error with cache.get(data.question): ", err);
+        //   reject(err);
+        // }
 
         cacheResults =
           process.env.CACHE === "Redis"
@@ -115,6 +116,8 @@ responseHelper.generateAndPost = (data) => {
               );
             } catch (err) {
               console.log("Error with cache.set method: ", err);
+              reject(err);
+              return;
             }
           }
         } else {
@@ -134,6 +137,7 @@ responseHelper.generateAndPost = (data) => {
         resolve(); // Resolve the Promise when the operation is complete
       } catch (err) {
         reject(err); // Reject the Promise if there's an error
+        return;
       }
     })().catch((e) => console.log("Caught error in promise: " + e));
   });
