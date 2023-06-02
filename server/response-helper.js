@@ -39,96 +39,98 @@ const responseHelper = {};
 responseHelper.generateAndPost = (data) => {
   console.log("hitting responseHelper.generateAndPost");
 
-  eventEmitter.emit("generateAndPost", data);
-};
-
-eventEmitter.on("generateAndPost", async (data) => {
-  console.log("hitting eventEmitter: generateAndPost");
-  let responseMessage, responseObj, cacheResults;
-
-  try {
-    cacheResults = await cache.get(data.question);
-  } catch (err) {
-    console.log("Error in cache.get(data.question): ", err);
-  }
-
-  cacheResults =
-    process.env.CACHE === "Redis" ? cacheResults : cacheResults?.props?.value;
-
-  if (cacheResults === null || cacheResults === undefined) {
-    console.log(process.env.CACHE + " cache miss");
-
+  return new Promise(async (resolve, reject) => {
     try {
-      responseObj = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "system", content: process.env.PROMPT },
-          {
-            role: "user",
-            content:
-              "Do not lie and make things up. If you don't have 100% confidence in the truthfulness of your response, ask the user to email Gahl.",
-          },
-          {
-            role: "user",
-            content:
-              "here is Gahl's resume, answer questions as if you are him, using his resume: " +
-              resume,
-          },
-          ...messages,
-          { role: "user", content: data.question },
-        ],
-        temperature: 0.1,
-        max_tokens: 400,
-        top_p: 0.5,
-      });
-    } catch (err) {
-      console.log("Error with openai.createChatCompletion: ", err);
-      throw new Error(err);
-    }
+      console.log("hitting generateAndPost");
+      let cacheResults = await cache.get(data.question);
 
-    if (!responseObj) {
-      console.log("No response from openai.generate response invocation");
-      throw new Error("no response");
-    } else if (responseObj?.data?.error) {
-      console.log("ERROR with generating a response: ", responseObj.data.error);
-      throw new Error(response.data.error);
-    } else {
-      responseMessage = responseObj.data.choices[0].message.content
-        .trim()
-        .replace(/(\r\n|\n|\r)/gm, "");
+      let responseMessage, responseObj;
 
-      try {
-        console.log("Adding to cache.");
-        await cache.set(
-          data.question,
-          process.env.CACHE === "Redis"
-            ? responseMessage
-            : { value: responseMessage }
-        );
-      } catch (err) {
-        console.log("Error with cache.set method: ", err);
+      cacheResults =
+        process.env.CACHE === "Redis"
+          ? cacheResults
+          : cacheResults?.props?.value;
+
+      if (cacheResults === null || cacheResults === undefined) {
+        console.log(process.env.CACHE + " cache miss");
+
+        try {
+          responseObj = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [
+              { role: "system", content: process.env.PROMPT },
+              {
+                role: "user",
+                content:
+                  "Do not lie and make things up. If you don't have 100% confidence in the truthfulness of your response, ask the user to email Gahl.",
+              },
+              {
+                role: "user",
+                content:
+                  "here is Gahl's resume, answer questions as if you are him, using his resume: " +
+                  resume,
+              },
+              ...messages,
+              { role: "user", content: data.question },
+            ],
+            temperature: 0.1,
+            max_tokens: 400,
+            top_p: 0.5,
+          });
+        } catch (err) {
+          console.log("Error with openai.createChatCompletion: ", err);
+          reject(err);
+          return;
+        }
+
+        if (!responseObj) {
+          console.log("No response from openai.generate response invocation");
+          reject(new Error("no response"));
+          return;
+        } else if (responseObj?.data?.error) {
+          console.log(
+            "ERROR with generating a response: ",
+            responseObj.data.error
+          );
+          reject(new Error(response.data.error));
+          return;
+        } else {
+          responseMessage = responseObj.data.choices[0].message.content
+            .trim()
+            .replace(/(\r\n|\n|\r)/gm, "");
+
+          try {
+            console.log("Adding to cache.");
+            await cache.set(
+              data.question,
+              process.env.CACHE === "Redis"
+                ? responseMessage
+                : { value: responseMessage }
+            );
+          } catch (err) {
+            console.log("Error with cache.set method: ", err);
+          }
+        }
+      } else {
+        responseMessage =
+          "Cache hit! Someone has asked this question before. Response: " +
+          cacheResults;
+
+        console.log(process.env.CACHE + " cache hit");
       }
+
+      if (data.platform === "slack") {
+        responseHelper.postToSlack(responseMessage);
+      } else if (data.platform === "website") {
+        responseHelper.postToWebsite(responseMessage);
+      }
+
+      resolve(); // Resolve the Promise when the operation is complete
+    } catch (err) {
+      reject(err); // Reject the Promise if there's an error
     }
-  } else {
-    responseMessage =
-      "Cache hit! Someone has asked this question before. Response: " +
-      cacheResults;
-
-    console.log(process.env.CACHE + " cache hit");
-  }
-
-  if (data.platform === "slack") {
-    responseHelper.postToSlack(responseMessage);
-  } else if (data.platform === "website") {
-    responseHelper.postToWebsite(responseMessage);
-  }
-
-  return;
-});
-
-eventEmitter.on("error", (error) => {
-  console.error("An error occurred within the EventEmitter:", error);
-});
+  });
+};
 
 responseHelper.postToSlack = (text) => {
   console.log("SENDING RESPONSE TO SLACK");
