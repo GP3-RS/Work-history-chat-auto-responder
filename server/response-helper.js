@@ -11,6 +11,7 @@ import cache from "./cache.js";
 
 //Import our series of messages to help train chatGPT before each response so that it answers correctly
 import messages from "../messages.js";
+console.log("messages import: ", messages ? "PASS" : "FAIL");
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,6 +21,7 @@ const resume = fs.readFileSync(path.resolve(__dirname + "../../resume"), {
   encoding: "utf8",
   flag: "r",
 });
+console.log("resume import: ", resume ? "PASS" : "FAIL");
 
 //Initialize and configure OpenAI API
 const openai = new OpenAIApi(
@@ -27,6 +29,7 @@ const openai = new OpenAIApi(
     apiKey: process.env.OPENAI_TOKEN,
   })
 );
+console.log("openai configuration: ", openai ? "PASS" : "FAIL");
 
 import EventEmitter from "events";
 const eventEmitter = new EventEmitter();
@@ -41,14 +44,16 @@ responseHelper.generateAndPost = (data) => {
 
 eventEmitter.on("generateAndPost", async (data) => {
   console.log("hitting eventEmitter: generateAndPost");
-  let responseMessage, responseObj;
+  let responseMessage, responseObj, cacheResults;
 
-  let cacheResults = await cache.get(data.question);
+  try {
+    cacheResults = await cache.get(data.question);
+  } catch (err) {
+    console.log("Error in cache.get(data.question): ", err);
+  }
 
   cacheResults =
     process.env.CACHE === "Redis" ? cacheResults : cacheResults?.props?.value;
-
-  console.log("cacheResults is: ", cacheResults);
 
   if (cacheResults === null || cacheResults === undefined) {
     console.log(process.env.CACHE + " cache miss");
@@ -80,8 +85,6 @@ eventEmitter.on("generateAndPost", async (data) => {
       console.log("Error with openai.createChatCompletion: ", err);
       throw new Error(err);
     }
-
-    console.log("responseObj is: ", responseObj);
 
     if (!responseObj) {
       console.log("No response from openai.generate response invocation");
@@ -145,13 +148,17 @@ responseHelper.postToSlack = (text) => {
     },
   })
     .then((resp) => {
-      if (!resp.ok) {
+      console.log("resp.ok is: ", resp.ok);
+      if (!resp?.ok) {
         console.log("Response not OK: ", resp);
+        throw new Error("Response not OK: " + resp.status);
       }
     })
     .catch((error) => {
       console.log("ERROR IN POSTMESSAGE:", error);
     });
+
+  return;
 };
 
 export default responseHelper;
