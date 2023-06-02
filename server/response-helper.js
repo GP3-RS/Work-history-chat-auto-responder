@@ -41,7 +41,7 @@ responseHelper.generateAndPost = (data) => {
 
 eventEmitter.on("generateAndPost", async (data) => {
   console.log("hitting eventEmitter: generateAndPost");
-  let responseMessage;
+  let responseMessage, responseObj;
 
   let cacheResults = await cache.get(data.question);
 
@@ -52,7 +52,7 @@ eventEmitter.on("generateAndPost", async (data) => {
     console.log(process.env.CACHE + " cache miss");
 
     try {
-      const responseObj = await openai.createChatCompletion({
+      responseObj = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [
           { role: "system", content: process.env.PROMPT },
@@ -75,28 +75,31 @@ eventEmitter.on("generateAndPost", async (data) => {
       });
     } catch (err) {
       console.log("Error with openai.createChatCompletion: ", err);
+      throw new Error(err);
     }
 
     if (!responseObj) {
       console.log("No response from openai.generate response invocation");
       throw new Error("no response");
     } else if (responseObj?.data?.error) {
-      console.log("ERROR with generating a response: ", response.data.error);
+      console.log("ERROR with generating a response: ", responseObj.data.error);
       throw new Error(response.data.error);
+    } else {
+      responseMessage = responseObj.data.choices[0].message.content
+        .trim()
+        .replace(/(\r\n|\n|\r)/gm, "");
+
+      try {
+        await cache.set(
+          data.question,
+          process.env.CACHE === "Redis"
+            ? responseMessage
+            : { value: responseMessage }
+        );
+      } catch (err) {
+        console.log("Error with cache.set method: ", err);
+      }
     }
-
-    responseMessage = responseObj.data.choices[0].message.content
-      .trim()
-      .replace(/(\r\n|\n|\r)/gm, "");
-
-    await cache
-      .set(
-        data.question,
-        process.env.CACHE === "Redis"
-          ? responseMessage
-          : { value: responseMessage }
-      )
-      .catch((err) => console.log("error in cache.set: ", err));
   } else {
     responseMessage =
       "Cache hit! Someone has asked this question before. Response: " +
