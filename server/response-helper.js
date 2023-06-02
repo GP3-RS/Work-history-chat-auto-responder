@@ -36,7 +36,7 @@ const eventEmitter = new EventEmitter({ captureRejections: true });
 
 const responseHelper = {};
 
-responseHelper.generateAndPost = async (data) => {
+responseHelper.generateAndPost = (data) => {
   console.log("hitting responseHelper.generateAndPost");
 
   return new Promise((resolve, reject) => {
@@ -135,7 +135,7 @@ responseHelper.generateAndPost = async (data) => {
       } catch (err) {
         reject(err); // Reject the Promise if there's an error
       }
-    })();
+    })().catch((e) => console.log("Caught error in promise: " + e));
   });
 };
 
