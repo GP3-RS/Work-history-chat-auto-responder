@@ -79,6 +79,8 @@ eventEmitter.on("generateAndPost", async (data) => {
       throw new Error(err);
     }
 
+    console.log("responseObj is: ", responseObj);
+
     if (!responseObj) {
       console.log("No response from openai.generate response invocation");
       throw new Error("no response");
@@ -91,6 +93,7 @@ eventEmitter.on("generateAndPost", async (data) => {
         .replace(/(\r\n|\n|\r)/gm, "");
 
       try {
+        console.log("Adding to cache.");
         await cache.set(
           data.question,
           process.env.CACHE === "Redis"
@@ -143,7 +146,6 @@ responseHelper.postToSlack = (text) => {
       if (!resp.ok) {
         console.log("Response not OK: ", resp);
       }
-      return resp.json();
     })
     .catch((error) => {
       console.log("ERROR IN POSTMESSAGE:", error);
