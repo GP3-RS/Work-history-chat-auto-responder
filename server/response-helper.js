@@ -51,8 +51,8 @@ eventEmitter.on("generateAndPost", async (data) => {
   if (cacheResults === null || cacheResults === undefined) {
     console.log(process.env.CACHE + " cache miss");
 
-    const responseObj = await openai
-      .createChatCompletion({
+    try {
+      const responseObj = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [
           { role: "system", content: process.env.PROMPT },
@@ -72,10 +72,10 @@ eventEmitter.on("generateAndPost", async (data) => {
         ],
         temperature: 0.1,
         max_tokens: 400,
-      })
-      .catch((err) =>
-        console.log("error with openai.createChatCompleteion ", err)
-      );
+      });
+    } catch (err) {
+      console.log("Error with openai.createChatCompletion: ", err);
+    }
 
     if (!responseObj) {
       console.log("No response from openai.generate response invocation");
