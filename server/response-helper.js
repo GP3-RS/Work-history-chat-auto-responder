@@ -31,9 +31,6 @@ const openai = new OpenAIApi(
 );
 console.log("openai configuration: ", openai ? "PASS" : "FAIL");
 
-import EventEmitter from "events";
-const eventEmitter = new EventEmitter({ captureRejections: true });
-
 const responseHelper = {};
 
 responseHelper.generateAndPost = (data) => {
@@ -42,16 +39,14 @@ responseHelper.generateAndPost = (data) => {
   return new Promise((resolve, reject) => {
     (async () => {
       try {
-        console.log("hitting generateAndPost");
-
         let responseMessage, responseObj, cacheResults;
 
-        // try {
-        //   cacheResults = await cache.get(data.question);
-        // } catch (err) {
-        //   console.log("Error with cache.get(data.question): ", err);
-        //   reject(err);
-        // }
+        try {
+          cacheResults = await cache.get(data.question);
+        } catch (err) {
+          console.log("Error with cache.get(data.question): ", err);
+          reject(err);
+        }
 
         cacheResults =
           process.env.CACHE === "Redis"
@@ -107,7 +102,6 @@ responseHelper.generateAndPost = (data) => {
               .replace(/(\r\n|\n|\r)/gm, "");
 
             try {
-              console.log("Adding to cache.");
               await cache.set(
                 data.question,
                 process.env.CACHE === "Redis"
