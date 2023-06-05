@@ -116,7 +116,7 @@ responseHelper.generateAndPost = (data) => {
           }
         } else {
           responseMessage =
-            "Cache hit! Someone has asked this question before. Response: " +
+            "Someone has asked this question before (i.e. it's a cache hit). The previously generated response was: \n" +
             cacheResults;
 
           console.log(process.env.CACHE + " cache hit");
@@ -155,7 +155,6 @@ responseHelper.postToSlack = (text) => {
     },
   })
     .then((resp) => {
-      console.log("resp.ok is: ", resp.ok);
       if (!resp?.ok) {
         console.log("Response not OK: ", resp);
         throw new Error("Response not OK: " + resp.status);
