@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
+dotenv.config();
 import fs from "fs";
 import path from "path";
-dotenv.config();
 import fetch from "node-fetch";
 
 import { Configuration, OpenAIApi } from "openai";
@@ -10,14 +10,14 @@ import { fileURLToPath } from "url";
 import cache from "./cache.js";
 
 //Import our series of messages to help train chatGPT before each response so that it answers correctly
-import messages from "../messages.js";
+import { messages } from "../messages.js";
 console.log("messages import: ", messages ? "PASS" : "FAIL");
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 //Import resume file for ChatGPT to know my work history
-const resume = fs.readFileSync(path.resolve(__dirname + "../../resume"), {
+const resume = fs.readFileSync(path.resolve(__dirname + "../../../resume"), {
   encoding: "utf8",
   flag: "r",
 });
@@ -30,30 +30,29 @@ const openai = new OpenAIApi(
   })
 );
 console.log("openai configuration: ", openai ? "PASS" : "FAIL");
+import { responseData, resLocals } from "../types.js";
 
-const responseHelper = {};
+const responseHelper = {
 
-responseHelper.generateAndPost = (data) => {
+generateAndPost: (data: resLocals): Promise<void> => {
   console.log("hitting responseHelper.generateAndPost");
 
-  return new Promise((resolve, reject) => {
-    (async () => {
+  return new Promise((resolve, reject): void => {
+    (async (): Promise<void> => {
       try {
-        let responseMessage, responseObj, cacheResults;
+        let responseMessage: string
+        let responseObj: responseData | null | undefined
+        let cacheResults: string | null | undefined;
 
         try {
-          cacheResults = await cache.get(data.question);
+          if (process.env.CACHE === 'Redis') cacheResults = await cache.get(data.question);
+          else if (process.env.CACHE === 'DynamoDB') cacheResults = (await cache.get(data.question)).props?.value;
         } catch (err) {
           console.log("Error with cache.get(data.question): ", err);
           reject(err);
         }
 
-        cacheResults =
-          process.env.CACHE === "Redis"
-            ? cacheResults
-            : cacheResults?.props?.value;
-
-        if (cacheResults === null || cacheResults === undefined) {
+        if (!cacheResults) {
           console.log(process.env.CACHE + " cache miss");
 
           try {
@@ -80,9 +79,9 @@ responseHelper.generateAndPost = (data) => {
               top_p: 0.5,
             });
           } catch (err) {
-            console.log("Error with openai.createChatCompletion: ", err);
-            reject(err);
-            return;
+              console.log("Error with openai.createChatCompletion: ", err);
+              reject(err);
+              return;
           }
 
           if (!responseObj) {
@@ -94,7 +93,7 @@ responseHelper.generateAndPost = (data) => {
               "ERROR with generating a response: ",
               responseObj.data.error
             );
-            reject(new Error(response.data.error));
+            reject(new Error(responseObj.data.error));
             return;
           } else {
             responseMessage = responseObj.data.choices[0].message.content
@@ -135,36 +134,41 @@ responseHelper.generateAndPost = (data) => {
       }
     })().catch((e) => console.log("Caught error in promise: " + e));
   });
-};
+},
 
-responseHelper.postToSlack = (text) => {
-  console.log("SENDING RESPONSE TO SLACK");
+  postToSlack: (text: string): void => {
+    console.log("SENDING RESPONSE TO SLACK");
 
-  let payload = {
-    channel: process.env.CHANNEL_NAME,
-    text,
-  };
+    let payload = {
+      channel: process.env.CHANNEL_NAME,
+      text,
+    };
 
-  fetch("https://slack.com/api/chat.postMessage", {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
-      Accept: "application/json",
-    },
-  })
-    .then((resp) => {
-      if (!resp?.ok) {
-        console.log("Response not OK: ", resp);
-        throw new Error("Response not OK: " + resp.status);
-      }
+    fetch("https://slack.com/api/chat.postMessage", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+        Accept: "application/json",
+      },
     })
-    .catch((error) => {
-      console.log("ERROR IN POSTMESSAGE:", error);
-    });
+      .then((resp) => {
+        if (!resp?.ok) {
+          console.log("Response not OK: ", resp);
+          throw new Error("Response not OK: " + resp.status);
+        }
+      })
+      .catch((error) => {
+        console.log("ERROR IN POSTMESSAGE:", error);
+      });
 
-  return;
-};
+    return;
+  },
+
+  postToWebsite: (text: string): void => {
+    return
+  }
+}
 
 export default responseHelper;

@@ -1,6 +1,8 @@
 //This series of messages helps to train ChatGPT on how I want it to answer questions. It ends up being less expensive to do this every req cycle than to use Fine Tuning.
 
-export default [
+import { ChatCompletionRequestMessage } from "openai";
+
+export const messages: ChatCompletionRequestMessage[] = [
   {
     role: "user",
     content:
