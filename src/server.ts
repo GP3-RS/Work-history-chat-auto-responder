@@ -1,19 +1,22 @@
 import express from "express";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT: number = Number(process.env.PORT) || 3000;
 
 app.use(express.json());
 
 import apiRouter from "./server/routes/api.js";
+import { ErrObj } from "./types.js";
 
-//APP TURNED OFF TO SAVE MONEY DURING TESTING
+//All requests sent to api router
 app.use("/api", apiRouter);
 
+//404 catch-all route handler
 app.use((req, res) => res.sendStatus(404));
 
-app.use((err, req, res, next) => {
-  const defaultErr = {
+//Global error handler
+app.use((err: ErrObj, req, res, next) => {
+  const defaultErr: ErrObj = {
     log: "Express error handler caught unknown middleware error",
     status: 400,
     message: { err: "An error occurred" },

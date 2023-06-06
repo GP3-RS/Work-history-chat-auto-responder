@@ -1,7 +1,3 @@
-import fetch from "node-fetch";
-import * as dotenv from "dotenv";
-dotenv.config();
-
 const slackController = {};
 
 slackController.logMessage = (req, res, next) => {
