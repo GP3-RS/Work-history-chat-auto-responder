@@ -47,7 +47,7 @@ const responseHelper = {
                             responseObj = await openai.createChatCompletion({
                                 model: "gpt-3.5-turbo",
                                 messages: [
-                                    { role: "system", content: process.env.PROMPT },
+                                    { role: "system", content: "You are an assistant that is answering questions about the resume and work history of Gahl Peled. You will respond to the user in the first person, as if you are Gahl. If you do not know the answer to something based on his work history or resume, prompt the user to email Gahl directly at gahlpeled@gmail.com. Do not lie and makes something up. Try to keep the conversation professional but lighthearted, so if the user asks an unprofessional or completely off topic question (besides what Gahls interests are or what he does in his free time), try to veer the conversation back to something work related. I am going to give you information about his work history and copy in his resume" },
                                     {
                                         role: "user",
                                         content: "Do not lie and make things up. If you don't have 100% confidence in the truthfulness of your response, ask the user to email Gahl.",
