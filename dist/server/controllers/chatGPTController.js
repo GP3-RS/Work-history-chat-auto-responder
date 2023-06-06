@@ -1,6 +1,6 @@
 import responseHelper from "../response-helper.js";
-var chatGPTController = {};
-chatGPTController.generateResponse = function (req, res, next) {
+const chatGPTController = {};
+chatGPTController.generateResponse = (req, res, next) => {
     console.log("hitting chatGPTController.generateResponse");
     if (res.locals.question.length === 0)
         return next();

@@ -1,8 +1,8 @@
-var slackController = {};
-slackController.logMessage = function (req, res, next) {
+const slackController = {};
+slackController.logMessage = (req, res, next) => {
     return next();
 };
-slackController.urlVerification = function (req, res, next) {
+slackController.urlVerification = (req, res, next) => {
     console.log("hitting slackController.urlVerification");
     if (req.body.challenge && req.body.type === "url_verification") {
         return res.status(200).json(req.body.challenge);
@@ -10,7 +10,7 @@ slackController.urlVerification = function (req, res, next) {
     else
         return next();
 };
-slackController.filterBotMessages = function (req, res, next) {
+slackController.filterBotMessages = (req, res, next) => {
     console.log("hitting slackController.filterBotMessages");
     if (req.body.event.client_msg_id && req.body.event.bot_id === undefined) {
         res.locals.platform = "slack";

@@ -1,5 +1,5 @@
 //This series of messages helps to train ChatGPT on how I want it to answer questions. It ends up being less expensive to do this every req cycle than to use Fine Tuning.
-export var messages = [
+export const messages = [
     {
         role: "user",
         content: "I'll give you some examples of questions and responses. You can use the following series of questions and responses as a way to prime yourself (that is, give yourself a context) for the user's question. If a user asks one of these questions, you should provide the same (or very similar) response.",
