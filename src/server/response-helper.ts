@@ -34,7 +34,7 @@ import { responseData, resLocals } from "../types.js";
 
 const responseHelper = {
 
-generateAndPost: (data: resLocals): Promise<void> => {
+generateAndPost: (data: resLocals): Promise<void | string> => {
   console.log("hitting responseHelper.generateAndPost");
 
   return new Promise((resolve, reject): void => {
@@ -123,11 +123,13 @@ generateAndPost: (data: resLocals): Promise<void> => {
 
         if (data.platform === "slack") {
           responseHelper.postToSlack(responseMessage);
+          resolve();
         } else if (data.platform === "website") {
-          responseHelper.postToWebsite(responseMessage);
+          resolve(responseMessage);
         }
 
-        resolve(); // Resolve the Promise when the operation is complete
+        resolve(); //Catch all resolve to keep from hanging
+        return;
       } catch (err) {
         reject(err); // Reject the Promise if there's an error
         return;
@@ -166,9 +168,6 @@ generateAndPost: (data: resLocals): Promise<void> => {
     return;
   },
 
-  postToWebsite: (text: string): void => {
-    return
-  }
 }
 
 export default responseHelper;
