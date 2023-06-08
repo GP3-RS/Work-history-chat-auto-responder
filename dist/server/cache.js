@@ -18,10 +18,11 @@ if (process.env.CACHE === "Redis") {
         await cache
             .connect()
             .then(() => console.log(`Connected to ${process.env.ENV} Redis cache`));
-        cache
-            .flushDb()
-            .then(() => console.log("Cache flushed"))
-            .catch((err) => console.log("error in cache flush command: ", err));
+        // UNCOMMENT BELOW TO FLUSH REDIS CACHE. If cached responses are inaccurate, for example, you may want to flush cache.
+        // cache
+        //   .flushDb()
+        //   .then(() => console.log("Cache flushed"))
+        //   .catch((err) => console.log("Error in cache flush command: ", err));
     })();
 }
 else if (process.env.CACHE === "DynamoDB") {
