@@ -7,8 +7,6 @@ slackController.logMessage = (req, res, next) => {
 slackController.urlVerification = (req, res, next) => {
   console.log("hitting slackController.urlVerification");
 
-  console.log("req.body is: ", req.body);
-
   if (req.body.challenge && req.body.type === "url_verification") {
     return res.status(200).json(req.body.challenge);
   } else return next();

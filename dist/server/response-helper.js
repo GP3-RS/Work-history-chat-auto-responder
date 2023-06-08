@@ -104,11 +104,13 @@ const responseHelper = {
                     }
                     if (data.platform === "slack") {
                         responseHelper.postToSlack(responseMessage);
+                        resolve();
                     }
                     else if (data.platform === "website") {
-                        responseHelper.postToWebsite(responseMessage);
+                        resolve(responseMessage);
                     }
-                    resolve(); // Resolve the Promise when the operation is complete
+                    resolve(); //Catch all resolve to keep from hanging
+                    return;
                 }
                 catch (err) {
                     reject(err); // Reject the Promise if there's an error
@@ -143,8 +145,5 @@ const responseHelper = {
         });
         return;
     },
-    postToWebsite: (text) => {
-        return;
-    }
 };
 export default responseHelper;
