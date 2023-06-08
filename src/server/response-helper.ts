@@ -79,7 +79,7 @@ generateAndPost: (data: resLocals): Promise<void | string> => {
               top_p: 0.2,
             });
           } catch (err) {
-              console.log("Error with openai.createChatCompletion: ", err);
+              console.log("Error with openai.createChatCompletion: ", err.data);
               reject(err);
               return;
           }

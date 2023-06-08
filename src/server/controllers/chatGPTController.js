@@ -7,10 +7,18 @@ chatGPTController.generateResponse = async (req, res, next) => {
 
   if (res.locals.question.length === 0) return next();
   else if (res.locals.platform === "slack") {
-    responseHelper.generateAndPost(res.locals);
+    try {
+      responseHelper.generateAndPost(res.locals);
+    } catch (err) {
+      console.log("Generate response failed");
+    }
     return next();
   } else if (res.locals.platform === "website") {
-    res.locals.payload = await responseHelper.generateAndPost(res.locals);
+    try {
+      res.locals.payload = await responseHelper.generateAndPost(res.locals);
+    } catch (err) {
+      console.log("Generate response failed");
+    }
     return next();
   }
 };
