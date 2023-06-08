@@ -60,6 +60,7 @@ const responseHelper = {
                                     ...messages,
                                     { role: "user", content: data.question },
                                 ],
+                                temperature: 0.1,
                                 max_tokens: 400,
                                 top_p: 0.2,
                             });

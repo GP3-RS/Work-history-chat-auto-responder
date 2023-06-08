@@ -7,10 +7,11 @@ import redis from "redis";
 let cache;
 if (process.env.CACHE === "Redis") {
     (async () => {
-        if (process.env.ENV === "Render" && process.env.REDIS_URL)
+        if (process.env.ENV === "Render" && process.env.REDIS_URL) {
             cache = redis.createClient({
                 url: process.env.REDIS_URL,
             });
+        }
         else
             cache = redis.createClient();
         cache.on("error", (error) => console.error(`Redis client error: ${error}`));
