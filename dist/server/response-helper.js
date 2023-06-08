@@ -66,7 +66,7 @@ const responseHelper = {
                             });
                         }
                         catch (err) {
-                            console.log("Error with openai.createChatCompletion: ", err.data);
+                            console.log("Error with openai.createChatCompletion: ", err.response.data);
                             reject(err);
                             return;
                         }
