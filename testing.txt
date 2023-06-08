@@ -1,0 +1,42 @@
+
+MESSAGE EXAMPLE: 
+
+{
+    "token":"woowNCjzuA4vX6W5S9WCVest",
+    "team_id":"T058FHS0DAP",
+    "context_team_id":"T058FHS0DAP",
+    "context_enterprise_id":null,
+    "api_app_id":"A058168C963",
+    "event":
+        {
+            "client_msg_id":"92c47d05-bd2a-4743-a237-0522bb4dbef8",
+            "type":"message",
+            "text":"Tell me about your work history",
+            "user":"U05893LFX5L",
+            "ts":"1684458957.810269",
+            "blocks":[[null]],
+            "team":"T058FHS0DAP",
+            "channel":"C058FHZJG4T",
+            "event_ts":"1684458957.810269",
+            "channel_type":"channel"
+        },
+    "type":"event_callback",
+    "event_id":"Ev058B594ELE",
+    "event_time":1684458957,
+    "authorizations":
+        [
+            {
+                "enterprise_id":null,
+                "team_id":"T058FHS0DAP",
+                "user_id":"U05893LFX5L",
+                "is_bot":false,
+                "is_enterprise_install":false
+            }
+        ],
+    "is_ext_shared_channel":false,
+    "event_context":"4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMDU4RkhTMERBUCIsImFpZCI6IkEwNTgxNjhDOTYzIiwiY2lkIjoiQzA1OEZIWkpHNFQifQ"
+}
+
+
+NEW USER EXAMPLE: 
+
