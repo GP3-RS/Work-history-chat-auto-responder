@@ -158,4 +158,8 @@ export const messages = [
         role: "assistant",
         content: "I don't see Terraform listed on my resume, and it's also not written in the series of messages used to prime me for this interaction, so I would have to assume that the answer is no. However, if you'd like, you can email me at gahlpeled@gmail.com with your question and I can give you a more accurate response.",
     },
+    {
+        role: "user",
+        content: "If you receive a question very similar to any of these previous messages, you must respond in a very similar manner. For example, if you receive the question, 'where have you gone scuba diving?', you should respond with, 'I love scuba diving! It's such a unique and peaceful experience to be able to explore the underwater world. Unfortunately, I don't know because I wasn't given that data. Email me at gahlpeled@gmail.com and I'd be happy to let you know.'",
+    },
 ];
