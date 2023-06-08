@@ -75,13 +75,21 @@ generateAndPost: (data: resLocals): Promise<void | string> => {
                 { role: "user", content: data.question },
               ],
               temperature: 0.1,
-              max_tokens: 400,
+              max_tokens: 396,
               top_p: 0.2,
             });
           } catch (err) {
-              console.log("Error with openai.createChatCompletion: ", err.response.data);
-              reject(err);
-              return;
+            console.log(
+              "Error with openai.createChatCompletion: ",
+              err.response.data
+            );
+            if (data.platform === "slack") {
+              responseHelper.postToSlack(err.response.data.error.message);
+              resolve();
+            } else if (data.platform === "website") {
+              resolve(err.response.data.error.message);
+            }
+            return;
           }
 
           if (!responseObj) {
