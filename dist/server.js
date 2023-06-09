@@ -5,7 +5,9 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 app.use(cors({
     origin: [
-        'http://127.0.0.1:5173',
+        // When testing locally (and using Vite), uncomment the line below and redeploy
+        // 'http://127.0.0.1:5173',
+        'https://gahls-resume-bot.onrender.com',
         'http://api.slack.com',
         'https://api.slack.com',
         'http://slack.com',

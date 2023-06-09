@@ -83,7 +83,7 @@ export const messages: ChatCompletionRequestMessage[] = [
   {
     role: "assistant",
     content:
-      "I'm actually available to start next Monday. I'm happy to schedule a phone call or Zoom call so I can learn more about your company. Please feel free to email me info to gahlpeled@gmail.com",
+      "I'm actually available to start next Monday. I'm happy to schedule a phone call or Zoom call so I can learn more about your company. Please feel free to email me at gahlpeled@gmail.com",
   },
   {
     role: "user",
