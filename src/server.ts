@@ -1,12 +1,25 @@
 import express from "express";
+import apiRouter from "./server/routes/api.js";
+import { ErrObj } from "./types.js";
+import cors from "cors";
 
 const app = express();
 const PORT: number = Number(process.env.PORT) || 3000;
 
-app.use(express.json());
+app.use(cors({ 
+  origin: [
+    'http://localhost:5173', 
+    'http://api.slack.com',
+    'https://api.slack.com',
+    'http://slack.com',
+    'https://slack.com',
+  ], 
+  credentials: true }))
 
-import apiRouter from "./server/routes/api.js";
-import { ErrObj } from "./types.js";
+app.use(express.json());
+app.use(express.urlencoded({
+  extended: true
+}));
 
 //All requests sent to api router
 app.use("/api", apiRouter);

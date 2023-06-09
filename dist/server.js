@@ -1,8 +1,22 @@
 import express from "express";
+import apiRouter from "./server/routes/api.js";
+import cors from "cors";
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
+app.use(cors({
+    origin: [
+        'http://localhost:5173',
+        'http://api.slack.com',
+        'https://api.slack.com',
+        'http://slack.com',
+        'https://slack.com',
+    ],
+    credentials: true
+}));
 app.use(express.json());
-import apiRouter from "./server/routes/api.js";
+app.use(express.urlencoded({
+    extended: true
+}));
 //All requests sent to api router
 app.use("/api", apiRouter);
 //404 catch-all route handler
