@@ -1,9 +1,5 @@
 const slackController = {};
 
-slackController.logMessage = (req, res, next) => {
-  return next();
-};
-
 slackController.urlVerification = (req, res, next) => {
   console.log("hitting slackController.urlVerification");
 
