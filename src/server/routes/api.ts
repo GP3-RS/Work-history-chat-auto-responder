@@ -2,6 +2,7 @@ import express from "express";
 
 import slackController from "../controllers/slackController.js";
 import chatGPTController from "../controllers/chatGPTController.js";
+import websiteController from "../controllers/websiteController.js";
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.post(
   }
 );
 
-router.post("/website", chatGPTController.generateResponse, (req, res) => {
+router.post("/website", websiteController.validateQuestion, chatGPTController.generateResponse, (req, res) => {
   res.status(200).json(res.locals.payload);
 });
 
