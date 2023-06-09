@@ -6,9 +6,9 @@ import cors from "cors";
 const app = express();
 const PORT: number = Number(process.env.PORT) || 3000;
 
-app.use(cors({ 
+app.use(cors({
   origin: [
-    'http://localhost:5173', 
+    'http://127.0.0.1:5173',
     'http://api.slack.com',
     'https://api.slack.com',
     'http://slack.com',
